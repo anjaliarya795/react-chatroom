@@ -21,13 +21,13 @@ const Register = () => {
           <input required style={{ display: "none" }} type="file" id="file" />
           <label htmlFor="file">
             <h1>+</h1>
-            {/* <img src={Add} alt="" /> */}
+            <img src="./img/add.png" alt="" />
             <span>Add an avatar</span>
           </label>
           <button>Sign up</button>
         </form>
         <p>
-          You do have an account? <Link to="">Login</Link>
+          {/* You do have an account? <Link to="">Login</Link> */}
         </p>
       </div>
     </div>
