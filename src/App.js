@@ -7,9 +7,9 @@ import "./styles.scss";
 function App() {
   return (
     <div className="App">
-      <Home/>
-       {/* <Register/> 
-       <Login/>  */}
+      {/* <Home/> */}
+       <Register/> 
+       {/* <Login/>  */}
     </div>
   );
 }
