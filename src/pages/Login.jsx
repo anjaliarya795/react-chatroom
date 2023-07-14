@@ -1,11 +1,22 @@
-import React from "react";
+import {React , useState } from "react";
 // import { Link } from "react-router-dom";
-
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Login = () => {
 
-  const handleSubmit = () => {
-    //
+  const [err, setErr] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      setErr(true);
+    }
   };
 
   return (
@@ -17,6 +28,7 @@ const Login = () => {
           <input type="email" placeholder="email" />
           <input type="password" placeholder="password" />
           <button>Sign in</button>
+          {err && <span>Something went wrong</span>}
         </form>
         {/* <p>You don't have an account? <Link to="">Register</Link></p> */}
       </div>
