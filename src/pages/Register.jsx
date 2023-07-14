@@ -1,16 +1,18 @@
-import React from "react";
-import {  createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
-
-// import Add from "../img/add.png";
+import {React, useState} from "react";
+import {  createUserWithEmailAndPassword , updateProfile } from "firebase/auth";
+import { auth , db , storage } from "../firebase";
 // import {  Link } from "react-router-dom";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
 
-  const [err, setErr] = useState(false)
+  const [err, setErr] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // const navigate = useNavigate();
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const displayName=e.target[0].value;
     const email=e.target[1].value;
@@ -42,7 +44,7 @@ const Register = () => {
 
           //create empty user chats on firestore
           await setDoc(doc(db, "userChats", res.user.uid), {});
-          navigate("/");
+          // navigate("/");
         } catch (err) {
           console.log(err);
           setErr(true);
@@ -70,11 +72,11 @@ const Register = () => {
             <img src="./img/add.png" alt="" />
             <span>Add an avatar</span>
           </label>
-          <button>Sign up</button>
+          <button disabled={loading}>Sign up</button>
           {err && <span>Something went wrong!</span>}
         </form>
         <p>
-          {/* You do have an account? <Link to="">Login</Link> */}
+          {/* You do have an account? <Link to="/Login">Login</Link> */}
         </p>
       </div>
     </div>
