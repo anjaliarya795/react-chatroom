@@ -13,16 +13,11 @@ const Navbar = () => {
     <div className='navbar'>
       <span className="logo">Chatroom</span>
       <div className="user">
-        <img 
-        // src={currentUser.photoURL} 
-        src=""
-        alt="" />
+        <img src={currentUser.photoURL} alt="" />
         <span>
-          {/* {currentUser.displayName} */}
+          {currentUser.displayName}
           </span>
-        <button 
-        // onClick={()=>signOut(auth)}
-        >logout</button>
+        <button onClick={()=>signOut(auth)}>logout</button>
       </div>
     </div>
   )

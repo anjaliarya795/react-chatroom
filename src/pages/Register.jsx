@@ -13,6 +13,7 @@ const Register = () => {
 
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const displayName=e.target[0].value;
     const email=e.target[1].value;
@@ -22,39 +23,48 @@ const Register = () => {
     try{
 
       const res = await createUserWithEmailAndPassword(auth, email, password);
-    //Create a unique image name
-    const date = new Date().getTime();
-    const storageRef = ref(storage, `${displayName + date}`);
+      //Create a unique image name
+      const date = new Date().getTime();
+      const storageRef = ref(storage, `${displayName + date}`);
 
-    await uploadBytesResumable(storageRef, file).then(() => {
-      getDownloadURL(storageRef).then(async (downloadURL) => {
-        try {
-          //Update profile
-          await updateProfile(res.user, {
-            displayName,
-            photoURL: downloadURL,
-          });
-          //create user on firestore
-          await setDoc(doc(db, "users", res.user.uid), {
-            uid: res.user.uid,
-            displayName,
-            email,
-            photoURL: downloadURL,
-          });
+      await uploadBytesResumable(storageRef, file).then(() => {
+        getDownloadURL(storageRef).then(async (downloadURL) => {
+          try {
+            //Update profile
+            await updateProfile(res.user, {
+              displayName,
+              photoURL: downloadURL,
+            });
+            //create user on firestore
+            console.log("Document data to be saved: ", {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL,
+            });
+            
+            await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL,
+            });
+            console.log("Document saved successfully!");
 
-          //create empty user chats on firestore
-          await setDoc(doc(db, "userChats", res.user.uid), {});
-          navigate("/");
-        } catch (err) {
-          console.log(err);
-          setErr(true);
-          setLoading(false);
-        }
+            //create empty user chats on firestore
+            await setDoc(doc(db, "userChats", res.user.uid), {});
+            navigate("/");
+          } 
+            catch (err) {
+            console.log(err);
+            setErr(true);
+            setLoading(false);
+          }
+        });
       });
-    });
-  } catch (err) {
-    setErr(true);
-    setLoading(false);
+    } catch (err) {
+      setErr(true);
+      setLoading(false);
   }
 };
 
@@ -73,10 +83,11 @@ const Register = () => {
             <span>Add an avatar</span>
           </label>
           <button disabled={loading}>Sign up</button>
+          {loading && "Uploading and compressing the image please wait..."}
           {err && <span>Something went wrong!</span>}
         </form>
         <p>
-          You do have an account? <Link to="/Login">Login</Link>
+          You do have an account? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
